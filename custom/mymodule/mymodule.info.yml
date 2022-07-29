@@ -1,0 +1,4 @@
+name: My First Custom Module
+type: module
+core_version_requirement: ^9
+description: Hello World Module for Drupal 9 Development
