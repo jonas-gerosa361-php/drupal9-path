@@ -38,7 +38,7 @@ class RSVPForm extends FormBase {
     ];
     $form['nid'] = [
       '#type' => 'hidden',
-      '#value' => $node->id ? $node->id: 0,
+      '#value' => $node->id() ? $node->id() : 0,
     ];
     return $form;
   }
