@@ -23,8 +23,18 @@ use Drupal\Core\Access\AccessResult;
    * (@inheritDoc)
    */
   public function build() {
-    return [
-      '#markup' => $this->t('My RSVP List Block'),
-    ];
+    return \Drupal::formBuilder()->getForm('Drupal\rsvplist\Form\RSVPForm');
+  }
+
+  /**
+   * (@inheritDoc)
+   */
+  public function blockAccess(AccountInterface $account) {
+    $node_not_found = !\Drupal::routeMatch()->getParameter('node');
+    if ($node_not_found) {
+      return AccessResult::forbidden();
+    }
+
+    return AccessResult::allowedIfHasPermission($account, 'view rsvplist');
   }
  }

@@ -1,0 +1,6 @@
+rsvplist.admin_settings:
+  title: 'RSVP List Settings'
+  description: 'Controll the display of RSVP Form'
+  route_name: rsvplist.admin_settings
+  parent: system.admin_config_content
+  weight: 50
