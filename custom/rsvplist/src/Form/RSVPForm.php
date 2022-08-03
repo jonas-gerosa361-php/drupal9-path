@@ -51,6 +51,22 @@ class RSVPForm extends FormBase {
     $invalid_email = !\Drupal::service('email.validator')->isValid($value);
     if ($invalid_email) {
       $form_state->setErrorByName('email', t('The value "%mail" is not a valid email.', ['%mail' => $value]));
+      return;
+    }
+
+    $node = \Drupal::routeMatch()->getParameter('node');
+    // Check if email already is set for this node.
+    $select = Database::getConnection()->select('rsvplist', 'r')
+      ->fields('r', ['nid'])
+      ->condition('nid', $node->id())
+      ->condition('mail', $value)
+      ->execute();
+
+    $email_already_subscribed = !empty($select->fetchCol());
+    if ($email_already_subscribed) {
+      $form_state->setErrorByName('email', $this->t('The address %mail is already subscribed to this list.', [
+        '%mail' => $value,
+      ]));
     }
   }
 

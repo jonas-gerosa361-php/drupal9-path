@@ -35,6 +35,13 @@ use Drupal\Core\Access\AccessResult;
       return AccessResult::forbidden();
     }
 
-    return AccessResult::allowedIfHasPermission($account, 'view rsvplist');
+    $enabler = \Drupal::service('rsvplist.enabler');
+    $node = \Drupal::routeMatch()->getParameter('node');
+    $node_may_collect_rsvp = $enabler->isEnabled($node);
+    if ($node_may_collect_rsvp) {
+      return AccessResult::allowedIfHasPermission($account, 'view rsvplist');
+    }
+
+    return AccessResult::forbidden();
   }
  }

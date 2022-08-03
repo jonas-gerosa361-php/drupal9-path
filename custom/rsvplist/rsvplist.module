@@ -1,0 +1,73 @@
+<?php
+/**
+ * @file
+ *   RSVP Module Hooks.
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+
+/**
+ * Implements hook_form_form_id_alter().
+ *
+ * Alter the node add/edit form to includ admin setting for displaying RSVPBlock with content.
+ */
+function rsvplist_form_node_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $node = $form_state->getFormObject()->getEntity();
+  $current_node_type = $node->getType();
+  $config = \Drupal::config('rsvplist.settings');
+  $types = $config->get('allowed_types', []);
+
+  // RSVP Options for adminis.
+  if (in_array($current_node_type, $types)) {
+    $form['rsvplist'] = [
+      '#type' => 'details',
+      '#title' => t('RSVP Collection'),
+      '#access' => \Drupal::currentUser()->hasPermission('administer rsvplist'),
+      '#group' => 'advanced',
+      '#weight' => 100,
+    ];
+    /** @var \Drupal\rsvplist\EnablerService $enabler */
+    $enabler = \Drupal::service('rsvplist.enabler');
+
+    $form['rsvplist']['rsvplist_enabled'] = [
+      '#type' => 'checkbox',
+      '#title' => t('Collect RSVP e-mail addresses for this node.'),
+      '#default_value' => $enabler->isEnabled($node),
+    ];
+
+    foreach (array_keys($form['actions']) as $action) {
+      $preview_mode = $action === 'preview';
+      $action_without_type = !isset($form['actions'][$action]['#type']);
+      if ($preview_mode || $action_without_type) {
+        return;
+      }
+
+      $action_type_submit = $form['actions'][$action]['#type'] === 'submit';
+      if ($action_type_submit) {
+        $form['actions'][$action]['#submit'][] = 'rsvplist_form_node_form_submit';
+      }
+    }
+  }
+}
+
+/**
+ * Form submission handler for RSVP item field on the node form.
+ *
+ * @see rsvplist_form_node_form_alter().
+ *
+ * @param array $form
+ *
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ *
+ */
+function rsvplist_form_node_form_submit(array $form, FormStateInterface $form_state) {
+  /** @var \Drupal\rsvplist\EnablerService $enabler */
+  $enabler = \Drupal::service('rsvplist.enabler');
+  $node = $form_state->getFormObject()->getEntity();
+
+  if ($form_state->getValue('rsvplist_enabled')) {
+    return $enabler->setEnabled($node);
+  }
+
+  $enabler->delEnabled($node);
+}
