@@ -1,27 +1,26 @@
 <?php
-/**
- * @file
- *   Form for RSVP List module.
- */
+
 namespace Drupal\rsvplist\Form;
 
-use \Drupal\Core\Database\Database;
-use \Drupal\Core\Form\FormBase;
+use Drupal\Core\Database\Database;
+use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\user\Entity\User;
 
 /**
  * Provides an RSVP Email form.
  */
 class RSVPForm extends FormBase {
+
   /**
-   * (@inheritDoc)
+   * {@inheritDoc}
    */
   public function getFormId() {
     return 'rsvplist_email_form';
   }
 
   /**
-   * (@inheritDoc)
+   * {@inheritDoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $node = \Drupal::routeMatch()->getParameter('node');
@@ -44,7 +43,7 @@ class RSVPForm extends FormBase {
   }
 
   /**
-   * (@inheritDoc)
+   * {@inheritDoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
     $value = $form_state->getValue('email');
@@ -71,11 +70,11 @@ class RSVPForm extends FormBase {
   }
 
   /**
-   * (@inheritDoc)
+   * {@inheritDoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     try {
-      $user = \Drupal\user\Entity\User::load(\Drupal::currentUser()->id());
+      $user = User::load(\Drupal::currentUser()->id());
       \Drupal::database()
         ->insert('rsvplist')
         ->fields([
@@ -86,9 +85,11 @@ class RSVPForm extends FormBase {
         ])
         ->execute();
       \Drupal::messenger()->addMessage(t('Thank you for registering for this event!'));
-    } catch (\Exception $e) {
+    }
+    catch (\Exception $e) {
       \Drupal::logger('warning')->critical(t('RSVP List database error: "%error"', ['%error' => $e->getMessage()]));
       \Drupal::messenger()->addError(t('Generic error, please contact our support team.'));
     }
   }
+
 }

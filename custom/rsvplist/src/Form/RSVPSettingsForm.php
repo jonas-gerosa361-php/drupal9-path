@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- *   Contains \Drupal\rsvplist\Form\RSVPSettingsForm.
- */
 
 namespace Drupal\rsvplist\Form;
 
@@ -13,24 +9,24 @@ use Drupal\Core\Form\FormStateInterface;
 /**
  * Defines a form to configure RSVP List module settings.
  */
+class RSVPSettingsForm extends ConfigFormBase {
 
- class RSVPSettingsForm extends ConfigFormBase {
   /**
-   * (@inheritDoc)
+   * {@inheritDoc}
    */
   public function getFormId() {
     return 'rsvplist_admin_settings';
   }
 
   /**
-   * (@inheritDoc)
+   * {@inheritDoc}
    */
   protected function getEditableConfigNames() {
     return ['rsvplist.settings'];
   }
 
   /**
-   * (@inheritDoc)
+   * {@inheritDoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state, Request $request = NULL) {
     $types = node_type_get_names();
@@ -59,4 +55,5 @@ use Drupal\Core\Form\FormStateInterface;
 
     parent::submitForm($form, $form_state);
   }
- }
+
+}

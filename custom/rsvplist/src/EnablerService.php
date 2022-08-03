@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- *   Contains \Drupal\rsvplist\EnablerService.
- */
 
 namespace Drupal\rsvplist;
 
@@ -13,10 +9,12 @@ use Drupal\node\Entity\Node;
  * Defines a service for managing RSVP list enabled for nodes.
  */
 class EnablerService {
+
   /**
    * Sets an individual node to be RSVP enabled.
    *
    * @param \Drupal\node\Entity\Node $node
+   *   Node param.
    */
   public function setEnabled(Node $node) {
     $node_not_enabled = !$this->isEnabled($node);
@@ -32,6 +30,7 @@ class EnablerService {
    * Checks if an individual node is RSVP enabled.
    *
    * @param \Drupal\node\Entity\Node $node
+   *   Node param.
    *
    * @return bool
    *   Whether the node is enabled for the RSVP functionality or not.
@@ -53,10 +52,12 @@ class EnablerService {
    * Deletes enabled settings for an individual node.
    *
    * @param \Drupal\node\Entity\Node $node
+   *   Node param.
    */
   public function delEnabled(Node $node) {
     Database::getConnection()->delete('rsvplist_enabled')
       ->condition('nid', $node->id())
       ->execute();
   }
+
 }

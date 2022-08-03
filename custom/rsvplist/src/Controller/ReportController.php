@@ -1,24 +1,21 @@
 <?php
-/**
- * @file
- *   Contains \Drupal\rsvplist\Controller\ReportController.
- */
 
 namespace Drupal\rsvplist\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Database\Database;
-use \Drupal\Component\Utility\Html;
-
+use Drupal\Component\Utility\Html;
 
 /**
  * Controller for RSVP List Report.
  */
 class ReportController extends ControllerBase {
+
   /**
    * Gets all RSVPs for all nodes.
    *
    * @return array
+   *   Returns array with all the rsvplist email with name, title and mail.
    */
   protected function load() {
     $select = Database::getConnection()->select('rsvplist', 'r');
@@ -54,10 +51,10 @@ class ReportController extends ControllerBase {
 
     $rows = [];
     foreach ($this->load() as $entry) {
-      $object_html = new Html;
+      $object_html = new Html();
 
       // Sanitize each entry.
-      $rows[] = array_map(function($entry) use ($object_html) {
+      $rows[] = array_map(function ($entry) use ($object_html) {
         return $object_html::escape($entry);
       }, $entry);
     }
@@ -73,4 +70,5 @@ class ReportController extends ControllerBase {
     $content['#cache']['max-age'] = 0;
     return $content;
   }
+
 }

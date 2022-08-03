@@ -1,4 +1,13 @@
 <?php
+
+/**
+ * @file
+ * Contains schema of RSVP module.
+ */
+
+/**
+ * Implements hook_schema().
+ */
 function rsvplist_schema() {
   $schema['rsvplist'] = [
     'description' => 'Stores email, timestamp, nid and uid for an rsvp',
