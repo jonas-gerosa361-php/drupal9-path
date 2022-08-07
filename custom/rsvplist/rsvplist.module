@@ -68,7 +68,8 @@ function rsvplist_form_node_form_submit(array $form, FormStateInterface $form_st
   $node = $form_state->getFormObject()->getEntity();
 
   if ($form_state->getValue('rsvplist_enabled')) {
-    return $enabler->setEnabled($node);
+    $enabler->setEnabled($node);
+    return;
   }
 
   $enabler->delEnabled($node);
